@@ -254,13 +254,13 @@ HAVING AVG(price) > 30;
 
 1. **COUNT()**: রো সংখ্যা গণনা করে
    ```sql
-   -- টেবিলে মোট বই সংখ্যা গণনা করুন
+   -- টেবিলে মোট বই সংখ্যা গণনা 
    SELECT COUNT(*) AS total_books FROM books;
    
-   -- শুধুমাত্র নির্দিষ্ট বইয়ের সংখ্যা গণনা করুন
+   -- শুধুমাত্র নির্দিষ্ট বইয়ের সংখ্যা গণনা 
    SELECT COUNT(*) AS low_stock_books FROM books WHERE stock < 5;
    
-   -- লেখক অনুসারে বই সংখ্যা গণনা করুন
+   -- লেখক অনুসারে বই সংখ্যা গণনা 
    SELECT author, COUNT(*) FROM books GROUP BY author;
    ```
 

@@ -111,6 +111,12 @@ SELECT ROUND(AVG(price), 2) AS average_book_price FROM books;
 
 -- 7. Increase the price of all books published before 2000 by 10%
 -- This query updates the price field for older books by multiplying their current price
+--  "increase by 10%" mean? =>
+-- It means you're adding 10 percent of the current price to the current price.
+-- Let ,
+-- If a book's price is ৳100,
+-- → 10% of 100 = ৳10
+-- → New price = ৳100 + ৳10 = ৳110
 -- by a factor of 1.1 (representing a 10% increase)
 UPDATE books SET price = price * 1.1 WHERE published_year < 2000;
 
