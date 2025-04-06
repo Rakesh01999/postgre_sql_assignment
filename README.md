@@ -491,5 +491,93 @@ GROUP BY published_year
 HAVING AVG(price) > 30;
 ```
 
-### ১০. How can you calculate aggregate functions like COUNT(), SUM(), and AVG() in PostgreSQL?(PostgreSQL-এ COUNT(), SUM(), এবং AVG() এর মতো অ্যাগ্রিগেট ফাংশন কীভাবে গণনা করা যায়?)
-অ্যাগ্রিগেট ফাংশন রো গ্রুপের
+
+## ১০. How can you calculate aggregate functions like COUNT(), SUM(), and AVG() in PostgreSQL?(PostgreSQL-এ COUNT(), SUM(), এবং AVG() এর মতো অ্যাগ্রিগেট ফাংশন কীভাবে গণনা করা যায়?)
+অ্যাগ্রিগেট ফাংশন রো গ্রুপের উপর অপারেশন করে এবং একটি একক মান প্রদান করে। এগুলি ডাটা থেকে উপযোগী সংক্ষিপ্ত তথ্য পাওয়ার একটি শক্তিশালী উপায়।
+
+**সাধারণ অ্যাগ্রিগেট ফাংশন:**
+
+1. **COUNT()**: রো সংখ্যা গণনা করে
+   ```sql
+   -- টেবিলে মোট বই সংখ্যা গণনা 
+   SELECT COUNT(*) AS total_books FROM books;
+   
+   -- শুধুমাত্র নির্দিষ্ট বইয়ের সংখ্যা গণনা 
+   SELECT COUNT(*) AS low_stock_books FROM books WHERE stock < 5;
+   
+   -- লেখক অনুসারে বই সংখ্যা গণনা 
+   SELECT author, COUNT(*) FROM books GROUP BY author;
+   ```
+
+2. **SUM()**: নিউমেরিক মানগুলির যোগফল গণনা করে
+   ```sql
+   -- সমস্ত বইয়ের মোট মূল্য
+   SELECT SUM(price) AS total_inventory_value FROM books;
+   
+   -- মোট বিক্রয় মূল্য
+   SELECT SUM(books.price * orders.quantity) AS total_sales
+   FROM orders JOIN books ON orders.book_id = books.id;
+   ```
+
+3. **AVG()**: নিউমেরিক মানগুলির গড় গণনা করে
+   ```sql
+   -- সমস্ত বইয়ের গড় মূল্য
+   SELECT AVG(price) AS average_book_price FROM books;
+   
+   -- প্রকাশের বছর অনুসারে গড় মূল্য
+   SELECT published_year, AVG(price) AS avg_price
+   FROM books GROUP BY published_year;
+   ```
+
+4. **MIN()**: সেটের সর্বনিম্ন মান খুঁজে বের করে
+   ```sql
+   -- সবচেয়ে সস্তা বইয়ের মূল্য
+   SELECT MIN(price) AS cheapest_book_price FROM books;
+   ```
+
+5. **MAX()**: সেটের সর্বোচ্চ মান খুঁজে বের করে
+   ```sql
+   -- সবচেয়ে দামী বইয়ের মূল্য
+   SELECT MAX(price) AS most_expensive_book FROM books;
+   ```
+
+**অ্যাডভান্সড ব্যবহার:**
+
+1. **DISTINCT সহ**:
+   ```sql
+   -- অনন্য লেখকদের সংখ্যা
+   SELECT COUNT(DISTINCT author) FROM books;
+   ```
+
+2. **শর্তাধীন অ্যাগ্রিগেশন**:
+   ```sql
+   -- বছর অনুযায়ী বইয়ের সংখ্যা এবং গড় মূল্য
+   SELECT 
+       published_year,
+       COUNT(*) AS book_count,
+       AVG(price) AS avg_price,
+       SUM(CASE WHEN stock > 0 THEN 1 ELSE 0 END) AS in_stock_count
+   FROM books
+   GROUP BY published_year;
+   ```
+
+3. **নেস্টেড অ্যাগ্রিগেট ফাংশন**:
+   ```sql
+   -- গড় বই মূল্য থেকে স্ট্যান্ডার্ড ডেভিয়েশন
+   SELECT 
+       AVG(price) AS avg_price,
+       SQRT(AVG(price*price) - AVG(price)*AVG(price)) AS price_stddev
+   FROM books;
+   ```
+
+4. **FILTER ক্লজ সহ (PostgreSQL-এ অনন্য)**:
+   ```sql
+   -- একই কোয়েরিতে বিভিন্ন অবস্থার জন্য বিভিন্ন গণনা
+   SELECT 
+       COUNT(*) AS total_books,
+       COUNT(*) FILTER (WHERE price < 30) AS affordable_books,
+       COUNT(*) FILTER (WHERE price >= 30) AS premium_books
+   FROM books;
+   ```
+
+   
